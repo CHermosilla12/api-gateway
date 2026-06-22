@@ -1,0 +1,38 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: ms-gateway
+  cloud:
+    gateway:
+      routes: # Lista de reglas de enrutamiento
+        
+        # ─── Ruta para ms-productos ─────────────────────────
+        - id: productos-route
+          uri: lb://catalogo
+          predicates:
+            - Path=/api/productos/**
+
+        # ─── Ruta para ms-tienda ────────────────────────────
+        - id: tienda-route
+          uri: lb://tienda
+          predicates:
+            - Path=/api/tiendas/**
+
+        # ─── Ruta para ms-carrito ───────────────────────────
+        - id: carrito-route
+          uri: lb://carrito
+          predicates:
+            - Path=/api/carrito/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
